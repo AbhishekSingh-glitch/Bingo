@@ -2,49 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bingo Game - README</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      line-height: 1.6;
-      border-radius: 10px;
-      background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      color: #2c3e50;
-    }
-    code {
-      background: #eef;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    pre {
-      background: #f0f0f0;
-      padding: 10px;
-      overflow: auto;
-      border-radius: 5px;
-    }
-    ul {
-      margin-left: 20px;
-    }
-    .highlight {
-      color: #e74c3c;
-      font-weight: bold;
-    }
-    .tech-stack, .structure {
-      background: #fafafa;
-      border-left: 4px solid #3498db;
-      padding: 10px 15px;
-      margin: 15px 0;
-      border-radius: 5px;
-    }
-  </style>
 </head>
 <body>
 
