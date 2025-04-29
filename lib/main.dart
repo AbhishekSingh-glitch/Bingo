@@ -1071,7 +1071,9 @@ class _BingoMapState extends State<BingoMap> {
                             setState(() {
                               // Full data refresh
                               user = Data();
-                              comp = Data();
+                              if(opponent==2){
+                                comp = Data();
+                              }
                             });
                             ScaffoldMessenger.of(context).clearSnackBars();
                             ScaffoldMessenger.of(context).showSnackBar(
