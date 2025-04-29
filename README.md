@@ -46,7 +46,11 @@
   </div>
 
   <h2>🚀 How to Run</h2>
-  <pre></pre>
+  <pre>## 📱 Download APK
+
+[![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://github.com/AbhishekSingh-glitch/Bingo/blob/main/app-release.apk?raw=true)
+
+  </pre>
 
   <hr>
   <p><strong>Enjoy the game — and may the best Bingo master win!</strong></p>
