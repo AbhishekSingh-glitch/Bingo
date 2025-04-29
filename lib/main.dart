@@ -117,7 +117,7 @@ class Data {
       case 3: // Hard
         return hard();
 
-      case 4:
+      case 4: //Expert
         return expert();
 
       default:
