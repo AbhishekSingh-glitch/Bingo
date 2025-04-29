@@ -21,21 +21,6 @@ class Data {
     lfd = 0;
   }
 
-  void reset() {
-    bingoMap = generateUniqueRandomNumbers(25, 1, 25);
-    lineColor = List.filled(25, Colors.transparent);
-    lineNumber = List.filled(12, 0);
-    hrz = List.filled(5, 0);
-    vrt = List.filled(5, 0);
-    bingo = '';
-    bingoCount = 0;
-    rtd = 0;
-    lfd = 0;
-  }
-
-  // getters
-  // setters
-
   // backend functions
 
   List<int> generateUniqueRandomNumbers(int count, int min, int max) {
@@ -120,23 +105,6 @@ class Data {
     return (bingoCount >= 5);
   }
 
-  int validNumber(int n, int cnt, int mode) {
-    if (n < 1 || n > 25) return mode;
-
-    for (int i = 0; i < cnt; i++) {
-      if (bingoMap[i] == n) return 0;
-    }
-    return 1;
-  }
-
-  int isValid(int number, int index) {
-    if (number == bingoMap[index]) {
-      // bingoMapDuplicate[index] = 0;
-      check(index);
-    }
-    return 0;
-  }
-
   // Levels
   setLevel(int level, int number) {
     switch (level) {
@@ -184,11 +152,6 @@ class Data {
         return bingoMap[i];
       }
     }
-  }
-
-  int listRandomNumber(List ofNumber) {
-    int idx = Random().nextInt(ofNumber.length);
-    return ofNumber[idx];
   }
 
   int hard() {
@@ -680,31 +643,37 @@ class _BingoMapState extends State<BingoMap> {
     return randomIndex;
   }
 
-  isCompleted(int playerNumber) {
-    String who = '';
-    if (playerNumber == 0 && user.uDone()) {
-      who = 'You';
-    } else if (comp != null) {
-      if (playerNumber == 1 && comp!.uDone()) {
-        who = 'Computer';
-      }
-    }
+  showMessages(BuildContext context, who, action, till) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Center(child: Text('The BINGO is completed $who Won')),
-        // duration: Duration(seconds: 5),
+        content: Center(child: Text(who, textAlign: TextAlign.center)),
         action: SnackBarAction(
-          label: 'New',
+          label: action,
           onPressed: () {
-            setState(() {
-              user = Data();
-              comp = Data();
-            });
+            if (action == 'Play Again') {
+              setState(() {
+                user = Data();
+                comp = Data();
+              });
+            }
           },
         ),
+        duration: Duration(seconds: till),
       ),
     );
+  }
+
+  changed(newOpponent, newLevel) {
+    user = Data();
+    opponent = newOpponent;
+    comp = (opponent == 2) ? Data() : null;
+    level = newLevel;
+    setState(() {});
+    Navigator.pop(context);
   }
 
   @override
@@ -732,7 +701,7 @@ class _BingoMapState extends State<BingoMap> {
                   // bingo block
                   Center(
                     child: SizedBox(
-                      width: w ,
+                      width: w * 0.95,
                       child: Stack(
                         children: [
                           GridView.builder(
@@ -745,37 +714,18 @@ class _BingoMapState extends State<BingoMap> {
                             itemBuilder: (BuildContext context, int index) {
                               return Card(
                                 color:
-                                    (user.lineColor[index] ==
-                                            Colors.transparent)
-                                        ? Color.fromRGBO(
-                                          255,
-                                          255,
-                                          255,
-                                          0.09019607843137255,
-                                        )
-                                        : user.lineColor[index],
+                                    (user.lineColor[index] == Colors.transparent)? Color.fromRGBO(255, 255, 255, 0.09019607843137255) : user.lineColor[index],
                                 child: Center(
                                   child: TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       // Checks if the tapped index is tapped before or not
                                       if (user.lineColor[index] !=
                                           Colors.transparent) {
-                                        ScaffoldMessenger.of(
+                                        showMessages(
                                           context,
-                                        ).clearSnackBars();
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              (user.lineColor[index] ==
-                                                      Colors.red)
-                                                  ? 'Number is Used by you'
-                                                  : 'Number is Used by computer',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            duration: Duration(seconds: 5),
-                                          ),
+                                          (user.lineColor[index] == Colors.red)
+                                              ? 'Number is Used by you'
+                                              : 'Number is Used by computer', '', 5,
                                         );
                                         return;
                                       } else {
@@ -785,82 +735,19 @@ class _BingoMapState extends State<BingoMap> {
                                       }
 
                                       if (user.uDone() && comp!.uDone()) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).clearSnackBars();
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'The BINGO is completed with DRAW',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            action: SnackBarAction(
-                                              label: 'Play Again',
-                                              onPressed: () {
-                                                setState(() {
-                                                  user = Data();
-                                                  comp = Data();
-                                                });
-                                              },
-                                            ),
-                                            duration: Duration(seconds: 5),
-                                          ),
+                                        showMessages(
+                                          context, 'The BINGO is completed With DRAW', 'Play Again', 5,
                                         );
                                         return;
                                       } else if (user.uDone()) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).clearSnackBars();
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'The BINGO is completed YOU Won',
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            action: SnackBarAction(
-                                              label: 'Play Again',
-                                              onPressed: () {
-                                                setState(() {
-                                                  user = Data();
-                                                  comp = Data();
-                                                });
-                                              },
-                                            ),
-                                            duration: Duration(seconds: 5),
-                                          ),
+                                        showMessages(context, 'The BINGO is completed YOU WON', 'Play Again', 5,
                                         );
                                         return;
-                                      } else if (comp != null) {
-                                        if (comp!.uDone()) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).clearSnackBars();
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'The BINGO is completed COMPUTER Won',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              action: SnackBarAction(
-                                                label: 'Play Again',
-                                                onPressed: () {
-                                                  setState(() {
-                                                    user = Data();
-                                                    comp = Data();
-                                                  });
-                                                },
-                                              ),
-                                              duration: Duration(seconds: 5),
-                                            ),
-                                          );
-                                          return;
-                                        }
+                                      } else if (comp != null &&
+                                          comp!.uDone()) {
+                                        showMessages(context, 'The BINGO is completed COMPUTER WON', 'Play Again', 5,
+                                        );
+                                        return;
                                       }
                                       setState(() {});
 
@@ -884,6 +771,9 @@ class _BingoMapState extends State<BingoMap> {
                                         comp!.check(indexOfOpponent);
                                       }
 
+                                      await Future.delayed(
+                                        Duration(milliseconds: 100),
+                                      );
                                       //-----------------------------Computer-----------------------------------------------------------------
 
                                       if (comp != null) {
@@ -911,77 +801,13 @@ class _BingoMapState extends State<BingoMap> {
                                         user.check(indexOfOpponent);
 
                                         if (user.uDone() && comp!.uDone()) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).clearSnackBars();
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'The BINGO is completed with DRAW',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              action: SnackBarAction(
-                                                label: 'Play Again',
-                                                onPressed: () {
-                                                  setState(() {
-                                                    user = Data();
-                                                    comp = Data();
-                                                  });
-                                                },
-                                              ),
-                                              duration: Duration(seconds: 5),
-                                            ),
+                                          showMessages(context, 'The BINGO is completed With DRAW', 'Play Again', 5,
                                           );
                                         } else if (user.uDone()) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).clearSnackBars();
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'The BINGO is completed YOU Won',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              action: SnackBarAction(
-                                                label: 'Play Again',
-                                                onPressed: () {
-                                                  setState(() {
-                                                    user = Data();
-                                                    comp = Data();
-                                                  });
-                                                },
-                                              ),
-                                              duration: Duration(seconds: 5),
-                                            ),
+                                          showMessages(context, 'The BINGO is completed YOU WON', 'Play Again', 5,
                                           );
                                         } else if (comp!.uDone()) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).clearSnackBars();
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'The BINGO is completed COMPUTER Won',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              action: SnackBarAction(
-                                                label: 'Play Again',
-                                                onPressed: () {
-                                                  setState(() {
-                                                    user = Data();
-                                                    comp = Data();
-                                                  });
-                                                },
-                                              ),
-                                              duration: Duration(seconds: 5),
-                                            ),
-                                          );
+                                          showMessages(context, 'The BINGO is completed COMPUTER WON', 'Play Again', 5,);
                                         }
                                       }
 
@@ -1053,39 +879,18 @@ class _BingoMapState extends State<BingoMap> {
                       builder: (context) {
                         return TextButton(
                           onPressed: () {
-                            setState(() {});
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Long press to reload map',
-                                  textAlign: TextAlign.center,
-                                ),
-
-                                duration: Duration(seconds: 5),
-                              ),
-                            );
+                            showMessages(context, 'Long press to reload map', '', 5,);
                           },
 
                           onLongPress: () {
                             setState(() {
                               // Full data refresh
                               user = Data();
-                              if(opponent==2){
+                              if (opponent == 2) {
                                 comp = Data();
                               }
                             });
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Bingo Refreshed',
-                                  textAlign: TextAlign.center,
-                                ),
-
-                                duration: Duration(seconds: 5),
-                              ),
-                            );
+                            showMessages(context, 'Bingo Refreshed', '', 5);
                           },
 
                           child: Icon(
@@ -1105,8 +910,7 @@ class _BingoMapState extends State<BingoMap> {
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor:
-                              Colors.white, // Optional: to make it look better
+                          backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(20),
@@ -1130,26 +934,14 @@ class _BingoMapState extends State<BingoMap> {
 
                                     TextButton(
                                       onPressed: () {
-                                        opponent = 1;
-                                        user = Data();
-                                        comp = null;
-                                        level = 0;
-                                        setState(() {});
-                                        Navigator.pop(
-                                          context,
-                                        ); // Close bottomSheet after selection
+                                        changed(1, 0);
                                       },
                                       child: Text('Change to Human'),
                                     ),
 
                                     TextButton(
                                       onPressed: () {
-                                        opponent = 2;
-                                        user = Data();
-                                        comp = Data();
-                                        level = 1;
-                                        setState(() {});
-                                        Navigator.pop(context);
+                                        changed(2, 1);
                                       },
                                       child: Text('Change to Computer'),
                                     ),
@@ -1174,43 +966,27 @@ class _BingoMapState extends State<BingoMap> {
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            comp = Data();
-                                            user = Data();
-                                            level = 1;
-                                            setState(() {});
-                                            Navigator.pop(context);
+                                            changed(2, 1);
                                           },
                                           child: Text('Easy'),
                                         ),
 
                                         TextButton(
                                           onPressed: () {
-                                            comp = Data();
-                                            user = Data();
-                                            level = 2;
-                                            setState(() {});
-                                            Navigator.pop(context);
+                                            changed(2, 2);
                                           },
                                           child: Text('Medium'),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            comp = Data();
-                                            user = Data();
-                                            level = 3;
-                                            setState(() {});
-                                            Navigator.pop(context);
+                                            changed(2, 3);
                                           },
                                           child: Text('Hard'),
                                         ),
 
                                         TextButton(
                                           onPressed: () {
-                                            comp = Data();
-                                            user = Data();
-                                            level = 4;
-                                            setState(() {});
-                                            Navigator.pop(context);
+                                            changed(2, 4);
                                           },
                                           child: Text('Expert'),
                                         ),
@@ -1228,23 +1004,11 @@ class _BingoMapState extends State<BingoMap> {
 
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(
-                                          context,
-                                        ); // Close bottomSheet first
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder:
-                                                (_, __, ___) => FillType(),
-                                            transitionDuration: Duration(
-                                              milliseconds: 300,
-                                            ),
-                                            transitionsBuilder: (
-                                              _,
-                                              animation,
-                                              __,
-                                              child,
-                                            ) {
+                                        Navigator.pop(context);
+                                        Navigator.push(context, PageRouteBuilder(
+                                            pageBuilder: (_, __, ___) => FillType(),
+                                            transitionDuration: Duration(milliseconds: 300,),
+                                            transitionsBuilder: (_, animation, __, child,) {
                                               return FadeTransition(
                                                 opacity: animation,
                                                 child: child,
@@ -1275,6 +1039,7 @@ class _BingoMapState extends State<BingoMap> {
                   ),
                 ],
               ),
+
               // pc
               Builder(
                 builder: (context) {
@@ -1299,7 +1064,7 @@ class _BingoMapState extends State<BingoMap> {
                             children: [
                               Center(
                                 child: SizedBox(
-                                  width: w * 0.9,
+                                  width: w * 0.95,
                                   child: GridView.builder(
                                     shrinkWrap: true,
                                     itemCount: 25,
@@ -1312,16 +1077,7 @@ class _BingoMapState extends State<BingoMap> {
                                       int index,
                                     ) {
                                       return Card(
-                                        color:
-                                            (comp!.lineColor[index] ==
-                                                    Colors.transparent)
-                                                ? Color.fromRGBO(
-                                                  255,
-                                                  255,
-                                                  255,
-                                                  0.09019607843137255,
-                                                )
-                                                : comp!.lineColor[index],
+                                        color: (comp!.lineColor[index] == Colors.transparent) ? Color.fromRGBO(255, 255, 255, 0.09019607843137255,) : comp!.lineColor[index],
                                         child: Center(
                                           child: Text(
                                             '${comp!.bingoMap[index]}',
