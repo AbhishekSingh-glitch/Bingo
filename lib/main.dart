@@ -7,7 +7,6 @@ class Data {
   List bingoMap = [], lineColor = [], lineNumber = [], hrz = [], vrt = [];
 
   var bingo = '', bingoCount = 0, rtd = 0, lfd = 0;
-  int step = 0, ln = 0;
 
   Data() {
     bingoMap = generateUniqueRandomNumbers(25, 1, 25);
@@ -513,7 +512,7 @@ class _FillTypeState extends State<FillType> {
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
-                    color: Color.fromRGBO(255, 255, 255, 0.09019607843137255),
+                    color: (user.lineColor[index] == Colors.transparent)? Color.fromRGBO(255, 255, 255, 0.09019607843137255) : user.lineColor[index],
                     child: Center(
                       child: TextButton(
                         onPressed: () {},
@@ -537,6 +536,9 @@ class _FillTypeState extends State<FillType> {
                     for (int i = 0; i < user.lineColor.length; i++) {
                       user.bingoMap[i] = i + 1;
                     }
+                    if(comp!=null){
+                      comp=Data();
+                    }
                     setState(() {});
                   },
                   child: Text(
@@ -556,6 +558,9 @@ class _FillTypeState extends State<FillType> {
                     for (int i = user.lineColor.length - 1; i >= 0; i--) {
                       user.bingoMap[24 - i] = i + 1;
                     }
+                    if(comp!=null){
+                      comp=Data();
+                    }
                     setState(() {});
                   },
                   child: Text(
@@ -565,24 +570,7 @@ class _FillTypeState extends State<FillType> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment(-0.6, 0.8),
-              child: Card(
-                color: Colors.red,
-                child: TextButton(
-                  onPressed: () {
-                    for (int i = 0; i < user.lineColor.length; i++) {
-                      user.bingoMap[i] = 0;
-                    }
-                    setState(() {});
-                  },
-                  child: Text(
-                    'Clear',
-                    style: TextStyle(color: textColor, fontSize: 15),
-                  ),
-                ),
-              ),
-            ),
+
             Align(
               alignment: Alignment(0.6, 0.8),
               child: Card(
@@ -874,12 +862,12 @@ class _BingoMapState extends State<BingoMap> {
 
                   // Reset button
                   Align(
-                    alignment: Alignment(0.5, -0.8),
+                    alignment: Alignment(0.5, -0.78),
                     child: Builder(
                       builder: (context) {
-                        return TextButton(
-                          onPressed: () {
-                            showMessages(context, 'Long press to reload map', '', 5,);
+                        return GestureDetector(
+                          onTap: () {
+                            showMessages(context, 'Long press to reload map\nDouble tap to reset map', '', 5,);
                           },
 
                           onLongPress: () {
@@ -891,6 +879,30 @@ class _BingoMapState extends State<BingoMap> {
                               }
                             });
                             showMessages(context, 'Bingo Refreshed', '', 5);
+                          },
+
+                          onDoubleTap: (){
+
+                            user.lineColor = List.filled(25, Colors.transparent);
+                            user.lineNumber = List.filled(12, 0);
+                            user.hrz = List.filled(5, 0);
+                            user.vrt = List.filled(5, 0);
+                            user.bingo = '';
+                            user.bingoCount = 0;
+                            user.rtd = 0;
+                            user.lfd = 0;
+
+                            if(comp!=null){
+                              comp!.lineColor = List.filled(25, Colors.transparent);
+                              comp!.lineNumber = List.filled(12, 0);
+                              comp!.hrz = List.filled(5, 0);
+                              comp!.vrt = List.filled(5, 0);
+                              comp!.bingo = '';
+                              comp!.bingoCount = 0;
+                              comp!.rtd = 0;
+                              comp!.lfd = 0;
+                            }
+                            setState(() {});
                           },
 
                           child: Icon(
@@ -1005,7 +1017,7 @@ class _BingoMapState extends State<BingoMap> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        Navigator.push(context, PageRouteBuilder(
+                                        Navigator.pushReplacement(context, PageRouteBuilder(
                                             pageBuilder: (_, __, ___) => FillType(),
                                             transitionDuration: Duration(milliseconds: 300,),
                                             transitionsBuilder: (_, animation, __, child,) {
