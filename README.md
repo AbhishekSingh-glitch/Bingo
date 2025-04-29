@@ -48,7 +48,7 @@
   <h2>🚀 How to Run</h2>
   <pre>## 📱 Download APK
 
-[![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://github.com/AbhishekSingh-glitch/Bingo/blob/main/app-release.apk?raw=true)
+[![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://github.com/AbhishekSingh-glitch/Bingo/blob/main/releases/bingo.apk?raw=true)
 
   </pre>
 
