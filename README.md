@@ -50,6 +50,19 @@
 
 [![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://github.com/AbhishekSingh-glitch/Bingo/blob/main/releases/bingo.apk?raw=true)
 
+
+  <h1>How to Play Bingo Game</h1>
+
+  <ol>
+    <li>Each player gets a 5×5 grid with numbers from 1 to 25 filled randomly.</li>
+    <li>Players take turns calling out numbers between 1 and 25.</li>
+    <li>When a number is called, both players mark that number on their grid</li>
+    <li>The goal is to complete a full line (horizontal, vertical, or diagonal).</li>
+    <li>For every completed line, the player gets a letter: B, I, N, G, O (in order).</li>
+    <li>The first player to complete all five lines and spell "BINGO" wins.</li>
+    <li>If both players complete "BINGO" at the same time, it's a draw.</li>
+  </ol>
+  
   </pre>
 
   <hr>
