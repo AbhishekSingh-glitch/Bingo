@@ -320,7 +320,7 @@ class Data {
 }
 
 int opponent = 2, fill = 2, level = 2; // Easy   Medium   Hard
-
+int undoIndex=-1;
 Color myBackground = Color.fromRGBO(0, 6, 21, 1.0);
 Color textColor = Colors.white;
 Data user = Data();
@@ -496,6 +496,25 @@ class FillType extends StatefulWidget {
 }
 
 class _FillTypeState extends State<FillType> {
+
+  button({
+    text,position,function
+    }){
+    return Align(
+      alignment: position,
+      child: Card(
+        color: Colors.red,
+        child: TextButton(
+          onPressed: function,
+          child: Text(
+            text,
+            style: TextStyle(color: textColor, fontSize: 15),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -523,178 +542,93 @@ class _FillTypeState extends State<FillType> {
                   );
                 },
               ),
+
               SizedBox(
                 height: MediaQuery.of(context).size.height*0.2 ,
                 width: MediaQuery.of(context).size.width,
                 child: Stack(
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Card(
-                        color: Colors.red,
-                        child: TextButton(
-                          onPressed: () {
-                            user = Data();
-                            for (int i = 0; i < user.lineColor.length; i++) {
-                              user.bingoMap[i] = i + 1;
-                            }
-                            if(comp!=null){
-                              comp=Data();
-                            }
-                            setState(() {});
-                          },
-                          child: Text(
-                            'Fill increasing',
-                            style: TextStyle(color: textColor, fontSize: 15),
-                          ),
-                        ),
-                      ),
+
+                    button(
+                      text: 'Fill Increasing',
+                      position: Alignment.topLeft,
+                      function: (){
+                        user = Data();
+                        for (int i = 0; i < user.lineColor.length; i++) {
+                          user.bingoMap[i] = i + 1;
+                        }
+
+                        if(comp!=null){
+                          comp=Data();
+                        }
+                        setState(() {});
+                      }
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Card(
-                        color: Colors.red,
-                        child: TextButton(
-                          onPressed: () {
 
-                            user = Data();
+                    button(
+                      text: 'Fill Decreasing',
+                      position: Alignment.bottomLeft,
+                      function: (){
+                        user = Data();
+                        for (int i = user.lineColor.length - 1; i >= 0; i--) {
+                          user.bingoMap[24 - i] = i + 1;
+                        }
 
-                            user.bingoMap[0]=1;
-                            user.bingoMap[1]=2;
-                            user.bingoMap[2]=3;
-                            user.bingoMap[3]=4;
-                            user.bingoMap[4]=5;
-
-                            user.bingoMap[5]=16;
-                            user.bingoMap[6]=17;
-                            user.bingoMap[7]=18;
-                            user.bingoMap[8]=19;
-                            user.bingoMap[9]=6;
-
-                            user.bingoMap[10]=15;
-                            user.bingoMap[11]=24;
-                            user.bingoMap[12]=25;
-                            user.bingoMap[13]=20;
-                            user.bingoMap[14]=7;
-
-                            user.bingoMap[15]=14;
-                            user.bingoMap[16]=23;
-                            user.bingoMap[17]=23;
-                            user.bingoMap[18]=21;
-                            user.bingoMap[19]=8;
-
-                            user.bingoMap[20]=13;
-                            user.bingoMap[21]=12;
-                            user.bingoMap[22]=11;
-                            user.bingoMap[23]=10;
-                            user.bingoMap[24]=9;
-
-                            if(comp!=null){
-                              comp=Data();
-                            }
-
-                            setState(() {});
-                          },
-                          child: Text(
-                            'clockwise',
-                            style: TextStyle(color: textColor, fontSize: 15),
-                          ),
-                        ),
-                      ),
+                        if(comp!=null){
+                          comp=Data();
+                        }
+                        setState(() {});
+                      }
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Card(
-                        color: Colors.red,
-                        child: TextButton(
-                          onPressed: () {
 
-                            user = Data();
+                    button(
+                      text: 'Clock Wise',
+                      position: Alignment.topRight,
+                      function: (){
+                        user = Data();
+                        List newValue = [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 25, 20, 7, 14, 23, 23, 21, 8, 13, 12, 11, 10, 9];
 
-                            user.bingoMap[0]=25;
-                            user.bingoMap[1]=24;
-                            user.bingoMap[2]=23;
-                            user.bingoMap[3]=22;
-                            user.bingoMap[4]=21;
+                        for (int i=0;i<25;i++){
+                          user.bingoMap[i] = newValue[i];
+                        }
 
-                            user.bingoMap[5]=10;
-                            user.bingoMap[6]=9;
-                            user.bingoMap[7]=8;
-                            user.bingoMap[8]=7;
-                            user.bingoMap[9]=20;
+                        if(comp!=null){
+                          comp=Data();
+                        }
 
-                            user.bingoMap[10]=11;
-                            user.bingoMap[11]=2;
-                            user.bingoMap[12]=1;
-                            user.bingoMap[13]=6;
-                            user.bingoMap[14]=19;
-
-                            user.bingoMap[15]=12;
-                            user.bingoMap[16]=3;
-                            user.bingoMap[17]=4;
-                            user.bingoMap[18]=5;
-                            user.bingoMap[19]=18;
-
-                            user.bingoMap[20]=13;
-                            user.bingoMap[21]=14;
-                            user.bingoMap[22]=15;
-                            user.bingoMap[23]=10;
-                            user.bingoMap[24]=17;
-
-                            if(comp!=null){
-                              comp=Data();
-                            }
-
-                            setState(() {});
-                          },
-                          child: Text(
-                            'Anti clockwise',
-                            style: TextStyle(color: textColor, fontSize: 15),
-                          ),
-                        ),
-                      ),
+                        setState(() {});
+                      }
                     ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Card(
-                        color: Colors.red,
-                        child: TextButton(
-                          onPressed: () {
-                            user = Data();
-                            for (int i = user.lineColor.length - 1; i >= 0; i--) {
-                              user.bingoMap[24 - i] = i + 1;
-                            }
-                            if(comp!=null){
-                              comp=Data();
-                            }
-                            setState(() {});
-                          },
-                          child: Text(
-                            'Fill decreasing',
-                            style: TextStyle(color: textColor, fontSize: 15),
-                          ),
-                        ),
-                      ),
+                    button(
+                      text: 'Anti Clock Wise',
+                      position: Alignment.bottomRight,
+                      function: (){
+
+                        user = Data();
+                        List newValue =[25, 24, 23, 22, 21, 10, 9, 8, 7, 20, 11, 2, 1, 6, 19, 12, 3, 4, 5, 18, 13, 14, 15, 10, 17];
+
+                        for (int i=0;i<25;i++){
+                          user.bingoMap[i] = newValue[i];
+                        }
+
+                        if(comp!=null){
+                          comp=Data();
+                        }
+
+                        setState(() {});
+                      }
                     ),
 
                   ],
                 ),
               ),
 
-              Align(
-                alignment: Alignment.centerRight,
-                child: Card(
-                  color: Colors.red,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Set',
-                      style: TextStyle(color: textColor, fontSize: 15),
-                    ),
-                  ),
-                ),
+              button(
+                text: 'Set',
+                position: Alignment.centerRight,
+                function: (){
+                  Navigator.pop(context);
+                }
               ),
             ],
           ),
@@ -784,6 +718,8 @@ class _BingoMapState extends State<BingoMap> {
     //User
     int number = user.bingoMap[index];
 
+    undoIndex = index;
+
     user.lineColor[index] = Colors.green;
 
     int indexOfOpponent = 0;
@@ -865,7 +801,8 @@ class _BingoMapState extends State<BingoMap> {
                   // bingo block
                   Center(
                     child: SizedBox(
-                      width: w * 0.95,
+                      // height: 500,
+                      width: 500,
                       child: Stack(
                         children: [
                           GridView.builder(
@@ -873,11 +810,11 @@ class _BingoMapState extends State<BingoMap> {
                             itemCount: 25,
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5,),
                             itemBuilder: (BuildContext context, index) {
-                              return Card(
-                                color: (user.lineColor[index] == Colors.transparent)? Color.fromRGBO(255, 255, 255, 0.09019607843137255) : user.lineColor[index],
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: () async { tapped(context,index); },
+                              return TextButton(
+                                onPressed: () async { tapped(context,index); },
+                                child: Card(
+                                  color: (user.lineColor[index] == Colors.transparent)? Color.fromRGBO(255, 255, 255, 0.09019607843137255) : user.lineColor[index],
+                                  child: Center(
                                     child: Text(
                                       '${user.bingoMap[index]}',
                                       style: TextStyle(
@@ -936,6 +873,34 @@ class _BingoMapState extends State<BingoMap> {
                       ),
                     ),
                   ),
+
+                  //Back Button
+                  (opponent==1)?Align(
+                    alignment: Alignment(0.2, -0.78),
+                    child: Builder(
+                      builder: (context) {
+                        return GestureDetector(
+                          onTap: () {
+
+                            if(undoIndex==-1) {
+                              showMessages(context, 'Match Not Started');
+                            }
+                            else{
+                              user.lineColor[undoIndex] = Colors.transparent;
+                              setState(() {});
+                              showMessages(context, 'Restored ${user.bingoMap[undoIndex]}');
+                            }
+                          },
+
+                          child: Icon(
+                            Icons.restore,
+                            color: textColor,
+                            size: 30,
+                          ),
+                        );
+                      },
+                    ),
+                  ):SizedBox(),
 
                   // Reset button
                   Align(
@@ -1005,50 +970,89 @@ class _BingoMapState extends State<BingoMap> {
                           ),
                           builder: (context) => Container(
                             padding: EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
+                            child: ListView(shrinkWrap: true,
                               children: [
+
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.tealAccent,
+                                          ),
+                                          child: Center(child: Text('Opponent')),
+                                        ),
+
+                                        TextButton(
+                                          onPressed: () {
+                                            // if(opponent == 2){
+                                              changed(1, 0);
+                                            // }
+                                            // else {
+                                            //   changed(2, 1);
+                                            // }
+                                          },
+                                          child: Text('Change to Human'),
+                                        ),
+                                      ],
+                                    ),
+
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width:100,
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.tealAccent,
+                                          ),
+                                          child: Center(child: Text('Fill')),
+                                        ),
+
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(context, PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) => FillType(),
+                                              transitionDuration: Duration(milliseconds: 300,),
+                                              transitionsBuilder: (_, animation, __, child,) {
+                                                return FadeTransition(
+                                                  opacity: animation,
+                                                  child: child,
+                                                );
+                                              },
+                                            ),
+                                            ).then((value) {setState(() {});});
+                                          },
+                                          child: Text('Fill Manually'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
                                 Container(
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.tealAccent,
                                   ),
-                                  child: Center(child: Text('Settings')),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    changed(1, 0);
-                                  },
-                                  child: Text('Change to Human'),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    changed(2, 1);
-                                  },
-                                  child: Text('Change to Computer'),
-                                ),
-
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.tealAccent,
-                                  ),
-                                  child: Center(child: Text('Level')),
+                                  child: Center(child: Text('Computer Level')),
                                 ),
 
                                 GridView(
                                   shrinkWrap: true,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 2.5,
-                                      ),
-
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4,
+                                    childAspectRatio: 2,
+                                  ),
+                                  physics: NeverScrollableScrollPhysics(),
                                   children: [
                                     TextButton(
                                       onPressed: () {
@@ -1079,32 +1083,6 @@ class _BingoMapState extends State<BingoMap> {
                                   ],
                                 ),
 
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.tealAccent,
-                                  ),
-                                  child: Center(child: Text('Fill')),
-                                ),
-
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.push(context, PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) => FillType(),
-                                      transitionDuration: Duration(milliseconds: 300,),
-                                      transitionsBuilder: (_, animation, __, child,) {
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                    ).then((value) {setState(() {});});
-                                  },
-                                  child: Text('Fill Manually'),
-                                ),
                                 SizedBox(height: 50),
                               ],
                             ),
@@ -1175,9 +1153,9 @@ class _BingoMapState extends State<BingoMap> {
                         else
                           Center(
                             child: Text(
-                              (opponent == 2)
-                                  ? 'Game Not\nCompleted'
-                                  : 'Opponent\nis Human',
+                              (opponent == 2) ?
+                                  'Game Not\nCompleted'
+                                : 'Opponent\nis Human',
                               textAlign: TextAlign.center,
                               style: TextStyle(color: textColor, fontSize: 50),
                             ),
